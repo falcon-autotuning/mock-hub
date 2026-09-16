@@ -1,0 +1,18 @@
+import (
+  "../std-lib/falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
+  "../std-lib/falconCore/communications/messages/measurementResponse/measurementResponse.fal"
+  "../std-lib/falconCore/physics/config/config.fal"
+  "../std-lib/falconCore/instrumentInterfaces/names/ports/ports.fal"
+)
+
+ffimport "mock-hub-wrapper.cpp" ("-I/opt/falcon/include/") ("-L/opt/falcon/lib" "-lfalcon-comms" "-lnats")
+
+struct MockHub {
+    routine New () -> (MockHub hub)
+    routine Start (int port) -> (bool success)
+    routine Stop () -> ()
+    routine SetDeviceState (voltageStatesResponse::VoltageStatesResponse response) -> ()
+    routine SetConfig (config::Config config) -> ()
+    routine SetPortPayload (ports::Ports knobs, ports::Ports meters) -> ()
+    routine SetMeasurementResponse (measurementResponse::MeasurementResponse response) -> ()
+}

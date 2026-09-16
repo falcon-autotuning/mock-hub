@@ -1,0 +1,62 @@
+import (
+  "../../testing/testing.fal"
+  "../../std-lib/falconCore/physics/config/config.fal"
+  "../../std-lib/falconCore/communications/voltageStates/deviceVoltageStates/deviceVoltageStates.fal"
+  "../../std-lib/falconCore/communications/voltageStates/deviceVoltageState/deviceVoltageState.fal"
+  "../../std-lib/falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
+  "../../std-lib/falconCore/instrumentInterfaces/names/ports/ports.fal"
+  "../../std-lib/falconCore/instrumentInterfaces/names/instrumentPort/instrumentPort.fal"
+  "../../std-lib/falconCore/instrumentInterfaces/names/instrument/instrument.fal"
+  "../../std-lib/falconCore/physics/deviceStructures/connection/connection.fal"
+  "../../std-lib/falconCore/physics/units/symbolUnit/symbolUnit.fal"
+  "../../std-lib/collections/array/array.fal"
+  "../mockHub.fal"
+)
+
+autotuner MockHubLifecycleTests -> (int passed, int failed) {
+    passed = 0; failed = 0;
+    start -> __init;
+
+    state test_mock_hub_lifecycle (TestRunner runner, TestContext t) {
+        mockHub::MockHub mock = mockHub::MockHub.New();
+        bool started = mock.Start(4222);
+        Error err_start = t.ExpectTrue(started, "MockHub started successfully on port 4222");
+
+        // 1. Test Config setup
+        config::Config cfg = config::Config.Load("device_config.yaml");
+        mock.SetConfig(cfg);
+        Error err_cfg = t.ExpectIntEq(cfg.NumUniqueChannels(), 2, "Config has 2 unique channels");
+
+        // 2. Test Port payload setup
+        instrumentPort::InstrumentPort knob1 = instrumentPort::InstrumentPort.NewKnob(
+            "P1", connection::Connection.NewPlungerGate("P1"), instrument::Instrument.DCVoltageSource(), symbolUnit::SymbolUnit.Volt(), "Plunger 1");
+        Array<instrumentPort::InstrumentPort> knob_arr = Array.New();
+        knob_arr.PushBack(knob1);
+        ports::Ports knobs = ports::Ports.New(knob_arr);
+
+        instrumentPort::InstrumentPort meter1 = instrumentPort::InstrumentPort.NewMeter(
+            "M1", connection::Connection.NewOhmic("M1"), instrument::Instrument.Amnmeter(), symbolUnit::SymbolUnit.Ampere(), "Meter 1");
+        Array<instrumentPort::InstrumentPort> meter_arr = Array.New();
+        meter_arr.PushBack(meter1);
+        ports::Ports meters = ports::Ports.New(meter_arr);
+
+        mock.SetPortPayload(knobs, meters);
+        Error err_knobs = t.ExpectIntEq(knobs.Size(), 1, "Knobs count is 1");
+        Error err_meters = t.ExpectIntEq(meters.Size(), 1, "Meters count is 1");
+
+        // 3. Test Device state setup
+        connection::Connection conn = connection::Connection.NewPlungerGate("P1");
+        symbolUnit::SymbolUnit u = symbolUnit::SymbolUnit.Volt();
+        deviceVoltageState::DeviceVoltageState s1 = deviceVoltageState::DeviceVoltageState.New(conn, -0.75, u);
+        Array<deviceVoltageState::DeviceVoltageState> arr = Array.New();
+        arr.PushBack(s1);
+        deviceVoltageStates::DeviceVoltageStates states = deviceVoltageStates::DeviceVoltageStates.New(arr);
+        voltageStatesResponse::VoltageStatesResponse state_resp = voltageStatesResponse::VoltageStatesResponse.New("OK", states);
+
+        mock.SetDeviceState(state_resp);
+        Error err_state = t.ExpectIntEq(state_resp.States().Size(), 1, "Device states count is 1");
+
+        mock.Stop();
+        -> __end(runner, t);
+    }
+}
