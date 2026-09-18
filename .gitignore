@@ -1,0 +1,17 @@
+# Falcon Standard Library Build Artifacts
+**/build/
+*.so
+dist/
+.falcon/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# vcpkg and credentials
+/vcpkg
+/vcpkg_installed/
+my-vcpkg-triplets/
+.nuget-credentials
+

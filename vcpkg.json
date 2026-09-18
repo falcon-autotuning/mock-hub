@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.json.schema.json",
+  "name": "mock-hub",
+  "version": "1.0.0",
+  "description": "Mock instrument hub service and FFI bindings for Falcon DSL tests",
+  "homepage": "https://github.com/falcon-autotuning/mock-hub",
+  "license": "MPL-2.0",
+  "dependencies": [
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.11.2"
+    },
+    {
+      "name": "spdlog"
+    },
+    {
+      "name": "cnats",
+      "version>=": "3.7.0"
+    },
+    {
+      "name": "falcon-typing",
+      "version>=": "1.0.0"
+    },
+    {
+      "name": "falcon-core",
+      "version>=": "1.2.12"
+    },
+    {
+      "name": "falcon-comms",
+      "version>=": "1.0.6"
+    }
+  ],
+  "builtin-baseline": "9942fb5f996ea431c5ed8fb8d2a53f31d08df62e",
+  "overrides": [
+    {
+      "name": "libpqxx",
+      "version": "7.10.5"
+    },
+    {
+      "name": "xtensor",
+      "version": "0.25.0"
+    },
+    {
+      "name": "xtl",
+      "version": "0.7.5"
+    }
+  ]
+}
