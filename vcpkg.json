@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.json.schema.json",
-  "name": "mock-hub",
+  "name": "falcon-mock-hub",
   "version": "1.0.0",
-  "description": "Mock instrument hub service and FFI bindings for Falcon DSL tests",
+  "description": "Mock instrument hub service and FFI bindings for Falcon",
   "homepage": "https://github.com/falcon-autotuning/mock-hub",
   "license": "MPL-2.0",
   "dependencies": [
@@ -34,6 +34,10 @@
     },
     {
       "name": "falcon-routine"
+    },
+    {
+      "name": "gtest",
+      "version>=": "1.16.0"
     }
   ],
   "builtin-baseline": "9942fb5f996ea431c5ed8fb8d2a53f31d08df62e",

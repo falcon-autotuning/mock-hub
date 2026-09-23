@@ -22,4 +22,4 @@ dependencies:
     local_path: "../testing/"
 
 ffi:
-  build/mock-hub-wrapper.so: sha256:73319d7c6713ba6ba930f2ed7ba57077c6b2f894fb6fa9ca43c69d291c8013cc
+  build/mock-hub-wrapper.so: sha256:788066661e6aff869bb155aa40a274f3ffc81eef4544add0ff9106ffb106ca57

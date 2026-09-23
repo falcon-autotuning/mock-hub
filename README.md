@@ -4,7 +4,7 @@ Mock Instrument Hub service and FFI bindings for Falcon DSL tests.
 
 ## Overview
 
-`mock-hub` provides a lightweight, in-memory mock implementation of the Falcon Instrument Hub. It embeds an instance of `nats-server` and implements the NATS request/response protocol subjects used by `falcon-routine` and `std-lib/hub`:
+`mock-hub` provides a lightweight mock implementation of the Falcon Instrument Hub. It embeds an instance of `nats-server` and implements the NATS request/response protocol subjects used by `falcon-routine` and `std-lib/hub`:
 
 - `INSTRUMENTHUB.STATE_REQUEST` -> `FALCON.STATE_RESPONSE`
 - `INSTRUMENTHUB.DEVICE_CONFIG_REQUEST` -> `FALCON.DEVICE_CONFIG_RESPONSE`
@@ -30,10 +30,16 @@ struct MockHub {
 ## Building & Testing
 
 ```bash
-# Build wrapper library
+# Build C++ library and FFI wrapper
 make build
 
-# Run tests
+# Run C++ unit tests
+make test-cpp
+
+# Run Falcon DSL tests
+make test-fal
+
+# Run all tests
 make test
 
 # Package release tarball
