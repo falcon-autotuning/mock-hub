@@ -1,11 +1,13 @@
-.PHONY: help configure build test test-cpp test-fal update-hashes archive clean vcpkg-bootstrap
+.PHONY: help configure build test test-cpp test-fal update-hashes archive release clean vcpkg-bootstrap
 
 VERSION := 1.0.0
 PKG_NAME := mockHub
+REPO_NAME := mock-hub
 SO_NAME := build/mock-hub-wrapper.so
 FAL_FILE := mockHub.fal
 YML_FILE := falcon.yml
 TARBALL := $(PKG_NAME)-$(VERSION).tar.gz
+RELEASE_TARBALL := $(REPO_NAME).tar.gz
 
 PRESET ?= linux-clang-release
 VCPKG_DIR ?= $(CURDIR)/vcpkg_installed/x64-linux-dynamic
@@ -49,10 +51,18 @@ update-hashes: build ## Update SHA-256 hash in falcon.yml
 	open('$(YML_FILE)', 'w').write(content); \
 	print(f'  ✓ Updated $(SO_NAME): sha256:{h}')"
 
-archive: update-hashes ## Create package tarball
+archive: update-hashes ## Create versioned package tarball
 	@mkdir -p dist
 	tar -czvf dist/$(TARBALL) $(YML_FILE) $(FAL_FILE) $(SO_NAME) README.md
 	@echo "✓ Created dist/$(TARBALL)"
+
+release: update-hashes ## Prepare falcon-pm release artifacts (both versioned and canonical repo tarballs)
+	@mkdir -p dist
+	tar -czvf dist/$(TARBALL) $(YML_FILE) $(FAL_FILE) $(SO_NAME) README.md
+	@cp -f dist/$(TARBALL) dist/$(RELEASE_TARBALL)
+	@echo "✓ Release artifacts ready in dist/:"
+	@echo "  - dist/$(TARBALL) (versioned release package)"
+	@echo "  - dist/$(RELEASE_TARBALL) (falcon-pm GitHub release asset)"
 
 clean: ## Remove build artifacts
 	rm -rf build vcpkg_installed dist .falcon
