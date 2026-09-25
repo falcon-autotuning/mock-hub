@@ -1,8 +1,8 @@
 import (
-  "../std-lib/falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
-  "../std-lib/falconCore/communications/messages/measurementResponse/measurementResponse.fal"
-  "../std-lib/falconCore/physics/config/config.fal"
-  "../std-lib/falconCore/instrumentInterfaces/names/ports/ports.fal"
+  "falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
+  "falconCore/communications/messages/measurementResponse/measurementResponse.fal"
+  "falconCore/physics/config/config.fal"
+  "falconCore/instrumentInterfaces/names/ports/ports.fal"
 )
 
 ffimport "mock-hub-wrapper.cpp" ("-I/opt/falcon/include/") ("-L/opt/falcon/lib" "-lfalcon-comms" "-lnats")

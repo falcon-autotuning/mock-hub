@@ -54,6 +54,7 @@ target_compile_options(falcon-mock-hub PRIVATE -Wall -Wextra -O3 -fPIC)
 
 # FFI wrapper shared library: mock-hub-wrapper
 add_library(mock-hub-wrapper SHARED
+  src/mock_hub.cpp
   mock-hub-wrapper.cpp
 )
 
@@ -71,9 +72,12 @@ target_include_directories(mock-hub-wrapper
 
 target_link_libraries(mock-hub-wrapper
   PRIVATE
-    falcon-mock-hub
+    falcon::falcon-comms
     falcon-core::falcon-core
     falcon::falcon-typing
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog
+    cnats::nats
 )
 
 target_compile_options(mock-hub-wrapper PRIVATE -Wall -Wextra -O3 -fPIC)

@@ -1,15 +1,15 @@
 import (
   "../../testing/testing.fal"
-  "../../std-lib/falconCore/physics/config/config.fal"
-  "../../std-lib/falconCore/communications/voltageStates/deviceVoltageStates/deviceVoltageStates.fal"
-  "../../std-lib/falconCore/communications/voltageStates/deviceVoltageState/deviceVoltageState.fal"
-  "../../std-lib/falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
-  "../../std-lib/falconCore/instrumentInterfaces/names/ports/ports.fal"
-  "../../std-lib/falconCore/instrumentInterfaces/names/instrumentPort/instrumentPort.fal"
-  "../../std-lib/falconCore/instrumentInterfaces/names/instrument/instrument.fal"
-  "../../std-lib/falconCore/physics/deviceStructures/connection/connection.fal"
-  "../../std-lib/falconCore/physics/units/symbolUnit/symbolUnit.fal"
-  "../../std-lib/collections/array/array.fal"
+  "falconCore/physics/config/config.fal"
+  "falconCore/communications/voltageStates/deviceVoltageStates/deviceVoltageStates.fal"
+  "falconCore/communications/voltageStates/deviceVoltageState/deviceVoltageState.fal"
+  "falconCore/communications/messages/voltageStatesResponse/voltageStatesResponse.fal"
+  "falconCore/instrumentInterfaces/names/ports/ports.fal"
+  "falconCore/instrumentInterfaces/names/instrumentPort/instrumentPort.fal"
+  "falconCore/instrumentInterfaces/names/instrument/instrument.fal"
+  "falconCore/physics/deviceStructures/connection/connection.fal"
+  "falconCore/physics/units/symbolUnit/symbolUnit.fal"
+  "collections/array/array.fal"
   "../mockHub.fal"
 )
 
@@ -29,13 +29,13 @@ autotuner MockHubLifecycleTests -> (int passed, int failed) {
 
         // 2. Test Port payload setup
         instrumentPort::InstrumentPort knob1 = instrumentPort::InstrumentPort.NewKnob(
-            "P1", connection::Connection.NewPlungerGate("P1"), instrument::Instrument.DCVoltageSource(), symbolUnit::SymbolUnit.Volt(), "Plunger 1");
+            "P1", connection::Connection.NewPlungerGate("P1"), symbolUnit::SymbolUnit.Volt(), "Plunger 1");
         Array<instrumentPort::InstrumentPort> knob_arr = Array.New();
         knob_arr.PushBack(knob1);
         ports::Ports knobs = ports::Ports.New(knob_arr);
 
         instrumentPort::InstrumentPort meter1 = instrumentPort::InstrumentPort.NewMeter(
-            "M1", connection::Connection.NewOhmic("M1"), instrument::Instrument.Amnmeter(), symbolUnit::SymbolUnit.Ampere(), "Meter 1");
+            "M1", connection::Connection.NewOhmic("M1"), symbolUnit::SymbolUnit.Ampere(), "Meter 1");
         Array<instrumentPort::InstrumentPort> meter_arr = Array.New();
         meter_arr.PushBack(meter1);
         ports::Ports meters = ports::Ports.New(meter_arr);
