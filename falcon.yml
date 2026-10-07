@@ -7,19 +7,19 @@ description: "Mock instrument hub service and FFI bindings for Falcon DSL tests"
 dependencies:
   - name: voltageStatesResponse
     version: 1.2.2
-    github: falcon-autotuning/std-lib
+    github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/voltageStatesResponse
   - name: measurementResponse
     version: 1.2.2
-    github: falcon-autotuning/std-lib
+    github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/measurementResponse
   - name: settingResponse
     version: 1.2.2
-    github: falcon-autotuning/std-lib
+    github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/settingResponse
   - name: config
     version: 1.2.2
-    github: falcon-autotuning/std-lib
+    github: github.com/falcon-autotuning/std-lib/falconCore/physics/config
   - name: ports
     version: 1.2.2
-    github: falcon-autotuning/std-lib
+    github: github.com/falcon-autotuning/std-lib/falconCore/instrumentInterfaces/names/ports
 
 ffi:
   build/mock-hub-wrapper.so: sha256:00ff2616ba3e79a2be7fb7131dead1b1847a6e374d25bda448adda5b518923fa
