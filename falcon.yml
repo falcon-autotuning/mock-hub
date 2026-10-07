@@ -22,4 +22,4 @@ dependencies:
     github: falcon-autotuning/std-lib
 
 ffi:
-  build/mock-hub-wrapper.so: sha256:48cfd3309c56d3bd8f600f580ceabc9bc001c5a5041ac8e6af8068bdcc058149
+  build/mock-hub-wrapper.so: sha256:00ff2616ba3e79a2be7fb7131dead1b1847a6e374d25bda448adda5b518923fa
