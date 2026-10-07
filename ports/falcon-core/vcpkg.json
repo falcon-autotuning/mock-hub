@@ -1,12 +1,13 @@
 {
   "name": "falcon-core",
-  "version": "1.2.13",
+  "version": "1.2.18",
   "features": {
     "c-api": {
       "description": "Builds the optional C-API library for falcon-core."
     }
   },
   "dependencies": [
+    "yaml-config-validator",
     {
       "name": "vcpkg-cmake"
     },

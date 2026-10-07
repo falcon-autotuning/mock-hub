@@ -1,6 +1,6 @@
 .PHONY: help configure build test test-cpp test-fal update-hashes archive release clean vcpkg-bootstrap
 
-VERSION := 1.0.0
+VERSION := 0.0.2
 PKG_NAME := mockHub
 REPO_NAME := mock-hub
 SO_NAME := build/mock-hub-wrapper.so

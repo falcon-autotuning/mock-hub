@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.json.schema.json",
   "name": "falcon-mock-hub",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Mock instrument hub service and FFI bindings for Falcon",
   "homepage": "https://github.com/falcon-autotuning/mock-hub",
   "license": "MPL-2.0",
@@ -23,7 +23,7 @@
     },
     {
       "name": "falcon-core",
-      "version>=": "1.2.12"
+      "version>=": "1.2.18"
     },
     {
       "name": "falcon-comms",
