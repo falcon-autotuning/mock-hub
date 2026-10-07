@@ -1,6 +1,7 @@
 import (
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/voltageStatesResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/measurementResponse"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/settingResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/physics/config"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/instrumentInterfaces/names/ports"
 )
@@ -15,4 +16,5 @@ struct MockHub {
     routine SetConfig (config::Config config) -> ()
     routine SetPortPayload (ports::Ports knobs, ports::Ports meters) -> ()
     routine SetMeasurementResponse (measurementResponse::MeasurementResponse response) -> ()
+    routine SetSettingResponse (settingResponse::SettingResponse response) -> ()
 }

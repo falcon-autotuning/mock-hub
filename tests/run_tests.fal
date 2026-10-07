@@ -4,10 +4,13 @@ import (
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/voltageStates/deviceVoltageStates"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/voltageStates/deviceVoltageState"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/voltageStatesResponse"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/settingResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/instrumentInterfaces/names/ports"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/instrumentInterfaces/names/instrumentPort"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/physics/deviceStructures/connection"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/physics/units/symbolUnit"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/math/quantity"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/collections/map"
   "github.com/falcon-autotuning/std-lib@v1.2.2/collections/array"
   "../mockHub.fal"
 )
@@ -54,6 +57,16 @@ autotuner MockHubLifecycleTests -> (int passed, int failed) {
 
         mock.SetDeviceState(state_resp);
         Error err_state = t.ExpectIntEq(state_resp.States().Size(), 1, "Device states count is 1");
+
+        // 4. Test Setting response setup
+        instrumentPort::InstrumentPort setting_port = instrumentPort::InstrumentPort.NewSetting(
+            "P1", connection::Connection.NewPlungerGate("P1"), symbolUnit::SymbolUnit.Volt(), "Plunger 1");
+        quantity::Quantity qty = quantity::Quantity.New(1.23, symbolUnit::SymbolUnit.Volt());
+        Map<instrumentPort::InstrumentPort, quantity::Quantity> getters_map = Map.New();
+        getters_map.Set(setting_port, qty);
+        settingResponse::SettingResponse setting_resp = settingResponse::SettingResponse.New("OK", getters_map);
+        mock.SetSettingResponse(setting_resp);
+        Error err_setting = t.ExpectStrEq("OK", setting_resp.Message(), "Setting response message matches");
 
         mock.Stop();
         -> __end(runner, t);

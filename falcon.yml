@@ -11,6 +11,9 @@ dependencies:
   - name: measurementResponse
     version: 1.2.2
     github: falcon-autotuning/std-lib
+  - name: settingResponse
+    version: 1.2.2
+    github: falcon-autotuning/std-lib
   - name: config
     version: 1.2.2
     github: falcon-autotuning/std-lib
@@ -19,4 +22,4 @@ dependencies:
     github: falcon-autotuning/std-lib
 
 ffi:
-  build/mock-hub-wrapper.so: sha256:f326c41f52d0e317d74457849f5f458311e56ffa55c8211b2abc63304336eb3b
+  build/mock-hub-wrapper.so: sha256:48cfd3309c56d3bd8f600f580ceabc9bc001c5a5041ac8e6af8068bdcc058149

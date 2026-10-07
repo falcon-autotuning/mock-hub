@@ -1,5 +1,6 @@
 #include <falcon-typing/FFIHelpers.hpp>
 #include "falcon-mock-hub/mock_hub.hpp"
+#include <falcon-core/communications/messages/SettingResponse.hpp>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -120,6 +121,16 @@ void STRUCTMockHubSetMeasurementResponse(const FalconParamEntry *param_entries, 
   auto resp = extract_opaque_handle<falcon_core::communications::messages::MeasurementResponse>(
       param_entries, param_count, "response", "MeasurementResponse");
   self->set_measurement_response(*resp);
+  *out_count = 0;
+}
+
+void STRUCTMockHubSetSettingResponse(const FalconParamEntry *param_entries, int32_t param_count,
+                                     FalconResultSlot *out_slots, int32_t *out_count) {
+  (void)out_slots;
+  auto self = extract_opaque_handle<MockHubServer>(param_entries, param_count, "this", "MockHub");
+  auto resp = extract_opaque_handle<falcon_core::communications::messages::SettingResponse>(
+      param_entries, param_count, "response", "SettingResponse");
+  self->set_setting_response(*resp);
   *out_count = 0;
 }
 

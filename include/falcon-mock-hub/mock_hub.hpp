@@ -4,6 +4,7 @@
 #include <falcon-comms/commands_definitions.hpp>
 #include <falcon-core/communications/messages/VoltageStatesResponse.hpp>
 #include <falcon-core/communications/messages/MeasurementResponse.hpp>
+#include <falcon-core/communications/messages/SettingResponse.hpp>
 #include <falcon-core/physics/config/core/Config.hpp>
 #include <falcon-core/instrument_interfaces/names/Ports.hpp>
 #include <mutex>
@@ -27,6 +28,7 @@ public:
   void set_port_payload(const falcon_core::instrument_interfaces::names::Ports &knobs,
                         const falcon_core::instrument_interfaces::names::Ports &meters);
   void set_measurement_response(const falcon_core::communications::messages::MeasurementResponse &response);
+  void set_setting_response(const falcon_core::communications::messages::SettingResponse &response);
 
   bool is_server_running() const { return is_running; }
   int get_port() const { return port; }
@@ -38,6 +40,7 @@ private:
   std::string knobs_json;
   std::string meters_json;
   std::string measure_response_json;
+  std::string setting_response_json;
   pid_t server_pid = 0;
   bool is_running = false;
   int port = 4222;

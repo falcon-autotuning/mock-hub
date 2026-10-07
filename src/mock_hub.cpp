@@ -74,13 +74,14 @@ bool MockHubServer::start(int p) {
       jsStreamConfig stream_cfg;
       jsStreamConfig_Init(&stream_cfg);
       stream_cfg.Name = "MEASUREMENTS";
-      const char *subjects[] = {"MEASUREMENTS.>"};
+      const char *subjects[] = {"MEASUREMENTS", "MEASUREMENTS.>"};
       stream_cfg.Subjects = subjects;
-      stream_cfg.SubjectsLen = 1;
+      stream_cfg.SubjectsLen = 2;
       stream_cfg.Storage = js_MemoryStorage;
       jsStreamInfo *si = nullptr;
       js_AddStream(&si, js, &stream_cfg, NULL, NULL);
       if (si) jsStreamInfo_Destroy(si);
+
       jsCtx_Destroy(js);
     }
     natsConnection_Destroy(raw_conn);
@@ -129,17 +130,35 @@ bool MockHubServer::start(int p) {
     } catch (...) {}
   });
 
+  // Subscribe to Setting Command
+  hub.subscribe("INSTRUMENTHUB.SETTING_COMMAND", [this](const std::string &msg) {
+    try {
+      auto j = nlohmann::json::parse(msg);
+      long long ts = 0;
+      if (j.contains("timestamp")) {
+        ts = j["timestamp"].get<long long>();
+      }
+      std::string resp_data;
+      {
+        std::lock_guard<std::mutex> lock(this->mutex);
+        resp_data = this->setting_response_json;
+      }
+      nlohmann::json resp;
+      resp["timestamp"] = ts;
+      resp["response"] = resp_data;
+      if (ts != 0) {
+        falcon::comms::NatsManager::instance().publish(
+            "FALCON.SETTING_RESPONSE." + std::to_string(ts), resp.dump());
+      }
+      falcon::comms::NatsManager::instance().publish(
+          "FALCON.SETTING_RESPONSE", resp.dump());
+    } catch (...) {}
+  });
+
   // Subscribe to Measure Command
   hub.subscribe("INSTRUMENTHUB.MEASURE_COMMAND", [this](const std::string &msg) {
     try {
       auto cmd = MeasureCommand::from_json(nlohmann::json::parse(msg));
-      MeasureResponse resp;
-      resp.timestamp = cmd.timestamp;
-      resp.stream = "MEASUREMENTS";
-      resp.channel = "measurement_channel";
-      falcon::comms::NatsManager::instance().publish(
-          "FALCON.MEASURE_RESPONSE." + std::to_string(cmd.timestamp), resp.to_json().dump());
-
       std::string data;
       {
         std::lock_guard<std::mutex> lock(this->mutex);
@@ -147,17 +166,31 @@ bool MockHubServer::start(int p) {
       }
       natsConnection *raw_conn = nullptr;
       std::string nats_url = std::getenv("NATS_URL") ? std::getenv("NATS_URL") : "nats://127.0.0.1:4222";
-      if (natsConnection_ConnectTo(&raw_conn, nats_url.c_str()) == NATS_OK) {
+      natsStatus conn_st = natsConnection_ConnectTo(&raw_conn, nats_url.c_str());
+      if (conn_st == NATS_OK) {
         jsCtx *js = nullptr;
-        if (natsConnection_JetStream(&js, raw_conn, NULL) == NATS_OK) {
+        natsStatus js_st = natsConnection_JetStream(&js, raw_conn, NULL);
+        if (js_st == NATS_OK) {
           jsPubAck *ack = nullptr;
           jsErrCode errCode;
           js_Publish(&ack, js, "MEASUREMENTS.data", data.c_str(), data.length(), nullptr, &errCode);
+          if (ack) jsPubAck_Destroy(ack);
+          ack = nullptr;
+          js_Publish(&ack, js, "MEASUREMENTS", data.c_str(), data.length(), nullptr, &errCode);
           if (ack) jsPubAck_Destroy(ack);
           jsCtx_Destroy(js);
         }
         natsConnection_Destroy(raw_conn);
       }
+
+      MeasureResponse resp;
+      resp.timestamp = cmd.timestamp;
+      resp.stream = "MEASUREMENTS";
+      resp.channel = "measurement_channel";
+      falcon::comms::NatsManager::instance().publish(
+          "FALCON.MEASURE_RESPONSE." + std::to_string(cmd.timestamp), resp.to_json().dump());
+      falcon::comms::NatsManager::instance().publish(
+          "FALCON.MEASURE_RESPONSE", resp.to_json().dump());
     } catch (...) {}
   });
 
@@ -173,6 +206,7 @@ void MockHubServer::stop() {
     hub.unsubscribe("INSTRUMENTHUB.DEVICE_CONFIG_REQUEST");
     hub.unsubscribe("INSTRUMENTHUB.PORT_REQUEST");
     hub.unsubscribe("INSTRUMENTHUB.MEASURE_COMMAND");
+    hub.unsubscribe("INSTRUMENTHUB.SETTING_COMMAND");
     hub.disconnect();
   } catch (...) {}
 
@@ -204,6 +238,11 @@ void MockHubServer::set_port_payload(const falcon_core::instrument_interfaces::n
 void MockHubServer::set_measurement_response(const falcon_core::communications::messages::MeasurementResponse &response) {
   std::lock_guard<std::mutex> lock(mutex);
   measure_response_json = response.to_json_string();
+}
+
+void MockHubServer::set_setting_response(const falcon_core::communications::messages::SettingResponse &response) {
+  std::lock_guard<std::mutex> lock(mutex);
+  setting_response_json = response.to_json_string();
 }
 
 } // namespace mock_hub
