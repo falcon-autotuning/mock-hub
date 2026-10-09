@@ -27,6 +27,9 @@ public:
   void set_config(const falcon_core::physics::config::core::Config &config);
   void set_port_payload(const falcon_core::instrument_interfaces::names::Ports &knobs,
                         const falcon_core::instrument_interfaces::names::Ports &meters);
+  void set_port_payload(const falcon_core::instrument_interfaces::names::Ports &knobs,
+                        const falcon_core::instrument_interfaces::names::Ports &meters,
+                        const falcon_core::instrument_interfaces::names::Ports &settings);
   void set_measurement_response(const falcon_core::communications::messages::MeasurementResponse &response);
   void set_setting_response(const falcon_core::communications::messages::SettingResponse &response);
 
@@ -39,6 +42,7 @@ private:
   std::string config_response_json;
   std::string knobs_json;
   std::string meters_json;
+  std::string settings_json;
   std::string measure_response_json;
   std::string setting_response_json;
   pid_t server_pid = 0;

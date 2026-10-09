@@ -30,7 +30,12 @@ bool is_port_open(int port) {
 
 } // namespace
 
-MockHubServer::MockHubServer() {}
+MockHubServer::MockHubServer() {
+  falcon_core::instrument_interfaces::names::Ports empty_ports;
+  knobs_json = empty_ports.to_json_string();
+  meters_json = empty_ports.to_json_string();
+  settings_json = empty_ports.to_json_string();
+}
 
 MockHubServer::~MockHubServer() {
   stop();
@@ -125,6 +130,7 @@ bool MockHubServer::start(int p) {
         std::lock_guard<std::mutex> lock(this->mutex);
         payload.knobs = this->knobs_json;
         payload.meters = this->meters_json;
+        payload.settings = this->settings_json;
       }
       falcon::comms::NatsManager::instance().publish("FALCON.PORT_PAYLOAD", payload.to_json().dump());
     } catch (...) {}
@@ -230,9 +236,17 @@ void MockHubServer::set_config(const falcon_core::physics::config::core::Config 
 
 void MockHubServer::set_port_payload(const falcon_core::instrument_interfaces::names::Ports &knobs,
                                     const falcon_core::instrument_interfaces::names::Ports &meters) {
+  falcon_core::instrument_interfaces::names::Ports empty_settings;
+  set_port_payload(knobs, meters, empty_settings);
+}
+
+void MockHubServer::set_port_payload(const falcon_core::instrument_interfaces::names::Ports &knobs,
+                                    const falcon_core::instrument_interfaces::names::Ports &meters,
+                                    const falcon_core::instrument_interfaces::names::Ports &settings) {
   std::lock_guard<std::mutex> lock(mutex);
   knobs_json = knobs.to_json_string();
   meters_json = meters.to_json_string();
+  settings_json = settings.to_json_string();
 }
 
 void MockHubServer::set_measurement_response(const falcon_core::communications::messages::MeasurementResponse &response) {

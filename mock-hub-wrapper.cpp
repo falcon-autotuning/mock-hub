@@ -110,7 +110,13 @@ void STRUCTMockHubSetPortPayload(const FalconParamEntry *param_entries, int32_t 
       param_entries, param_count, "knobs", "Ports");
   auto meters = extract_opaque_handle<falcon_core::instrument_interfaces::names::Ports>(
       param_entries, param_count, "meters", "Ports");
-  self->set_port_payload(*knobs, *meters);
+  if (param_count >= 4) {
+    auto settings = extract_opaque_handle<falcon_core::instrument_interfaces::names::Ports>(
+        param_entries, param_count, "settings", "Ports");
+    self->set_port_payload(*knobs, *meters, *settings);
+  } else {
+    self->set_port_payload(*knobs, *meters);
+  }
   *out_count = 0;
 }
 
