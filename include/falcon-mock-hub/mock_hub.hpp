@@ -3,6 +3,7 @@
 #include <falcon-comms/natsManager.hpp>
 #include <falcon-comms/commands_definitions.hpp>
 #include <falcon-core/communications/messages/VoltageStatesResponse.hpp>
+#include <falcon-core/communications/messages/MeasurementRequest.hpp>
 #include <falcon-core/communications/messages/MeasurementResponse.hpp>
 #include <falcon-core/communications/messages/SettingResponse.hpp>
 #include <falcon-core/physics/config/core/Config.hpp>
@@ -35,6 +36,9 @@ public:
 
   static std::string sample_measurement_response_json();
   static falcon_core::communications::messages::MeasurementResponse sample_measurement_response();
+
+  static std::string sample_measurement_request_json();
+  static falcon_core::communications::messages::MeasurementRequest sample_measurement_request();
 
   bool is_server_running() const { return is_running; }
   int get_port() const { return port; }

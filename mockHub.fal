@@ -1,5 +1,6 @@
 import (
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/voltageStatesResponse"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/measurementRequest"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/measurementResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/settingResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/physics/config"
@@ -19,4 +20,6 @@ struct MockHub {
     routine SetSettingResponse (settingResponse::SettingResponse response) -> ()
     routine SampleMeasurementResponseJSON () -> (string json)
     routine SampleMeasurementResponse () -> (measurementResponse::MeasurementResponse response)
+    routine SampleMeasurementRequestJSON () -> (string json)
+    routine SampleMeasurementRequest () -> (measurementRequest::MeasurementRequest request)
 }

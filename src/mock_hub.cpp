@@ -10,6 +10,17 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <falcon-core/communications/messages/MeasurementRequest.hpp>
+#include <falcon-core/generic/List.hpp>
+#include <falcon-core/generic/Map.hpp>
+#include <falcon-core/instrument_interfaces/Waveform.hpp>
+#include <falcon-core/instrument_interfaces/names/InstrumentPort.hpp>
+#include <falcon-core/instrument_interfaces/port_transforms/PortTransform.hpp>
+#include <falcon-core/physics/device_structures/Connection.hpp>
+#include <falcon-core/physics/units/SymbolUnit.hpp>
+#include <falcon-core/math/domains/LabelledDomain.hpp>
+#include <falcon-core/math/arrays/LabelledArrays.hpp>
+#include <falcon-core/math/arrays/LabelledMeasuredArray.hpp>
 
 namespace falcon {
 namespace mock_hub {
@@ -86,6 +97,13 @@ bool MockHubServer::start(int p) {
       jsStreamInfo *si = nullptr;
       js_AddStream(&si, js, &stream_cfg, NULL, NULL);
       if (si) jsStreamInfo_Destroy(si);
+
+      jsConsumerConfig consumer_cfg;
+      jsConsumerConfig_Init(&consumer_cfg);
+      consumer_cfg.Durable = "measurement_channel";
+      jsConsumerInfo *ci = nullptr;
+      js_AddConsumer(&ci, js, "MEASUREMENTS", &consumer_cfg, NULL, NULL);
+      if (ci) jsConsumerInfo_Destroy(ci);
 
       jsCtx_Destroy(js);
     }
@@ -268,6 +286,30 @@ std::string MockHubServer::sample_measurement_response_json() {
 falcon_core::communications::messages::MeasurementResponse MockHubServer::sample_measurement_response() {
   auto arr = std::make_shared<falcon_core::math::arrays::LabelledArrays<falcon_core::math::arrays::LabelledMeasuredArray>>();
   return falcon_core::communications::messages::MeasurementResponse(arr);
+}
+
+falcon_core::communications::messages::MeasurementRequest MockHubServer::sample_measurement_request() {
+  auto wlist = std::make_shared<falcon_core::generic::List<falcon_core::instrument_interfaces::Waveform>>();
+  auto getters = std::make_shared<falcon_core::instrument_interfaces::names::Ports>();
+  auto meter_transforms = std::make_shared<
+      falcon_core::generic::Map<falcon_core::instrument_interfaces::names::InstrumentPort, falcon_core::instrument_interfaces::port_transforms::PortTransform>>();
+  auto conn = falcon_core::physics::device_structures::Connection::PlungerGate("P1");
+  auto unit = falcon_core::physics::units::SymbolUnit::Volt();
+  auto time_domain = std::make_shared<falcon_core::math::domains::LabelledDomain>(
+      "P1", "",
+      falcon_core::instrument_interfaces::names::Scope::Local,
+      falcon_core::instrument_interfaces::names::Access::ReadWrite,
+      falcon_core::instrument_interfaces::names::InstrumentCharacteristic::None,
+      std::make_pair(0.0, 1.0),
+      falcon_core::instrument_interfaces::names::PortType::Knob,
+      unit, "test", conn,
+      falcon_core::instrument_interfaces::names::Instrument::DC_Voltage_Source,
+      true, true);
+  return falcon_core::communications::messages::MeasurementRequest("", wlist, getters, meter_transforms, time_domain);
+}
+
+std::string MockHubServer::sample_measurement_request_json() {
+  return sample_measurement_request().to_json_string();
 }
 
 } // namespace mock_hub
