@@ -17,4 +17,6 @@ struct MockHub {
     routine SetPortPayload (ports::Ports knobs, ports::Ports meters) -> ()
     routine SetMeasurementResponse (measurementResponse::MeasurementResponse response) -> ()
     routine SetSettingResponse (settingResponse::SettingResponse response) -> ()
+    routine SampleMeasurementResponseJSON () -> (string json)
+    routine SampleMeasurementResponse () -> (measurementResponse::MeasurementResponse response)
 }

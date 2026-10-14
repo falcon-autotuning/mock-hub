@@ -140,4 +140,22 @@ void STRUCTMockHubSetSettingResponse(const FalconParamEntry *param_entries, int3
   *out_count = 0;
 }
 
+void STRUCTMockHubSampleMeasurementResponseJSON(const FalconParamEntry *param_entries, int32_t param_count,
+                                                FalconResultSlot *out_slots, int32_t *out_count) {
+  (void)param_entries;
+  (void)param_count;
+  std::string json = MockHubServer::sample_measurement_response_json();
+  pack_results(FunctionResult{json}, out_slots, 16, out_count);
+}
+
+void STRUCTMockHubSampleMeasurementResponse(const FalconParamEntry *param_entries, int32_t param_count,
+                                            FalconResultSlot *out_slots, int32_t *out_count) {
+  (void)param_entries;
+  (void)param_count;
+  auto resp = std::make_shared<falcon_core::communications::messages::MeasurementResponse>(
+      MockHubServer::sample_measurement_response());
+  pack_opaque(resp, &out_slots[0], "MeasurementResponse");
+  *out_count = 1;
+}
+
 } // extern "C"

@@ -33,6 +33,9 @@ public:
   void set_measurement_response(const falcon_core::communications::messages::MeasurementResponse &response);
   void set_setting_response(const falcon_core::communications::messages::SettingResponse &response);
 
+  static std::string sample_measurement_response_json();
+  static falcon_core::communications::messages::MeasurementResponse sample_measurement_response();
+
   bool is_server_running() const { return is_running; }
   int get_port() const { return port; }
 

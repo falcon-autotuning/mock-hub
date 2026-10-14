@@ -259,5 +259,16 @@ void MockHubServer::set_setting_response(const falcon_core::communications::mess
   setting_response_json = response.to_json_string();
 }
 
+std::string MockHubServer::sample_measurement_response_json() {
+  auto arr = std::make_shared<falcon_core::math::arrays::LabelledArrays<falcon_core::math::arrays::LabelledMeasuredArray>>();
+  falcon_core::communications::messages::MeasurementResponse resp(arr);
+  return resp.to_json_string();
+}
+
+falcon_core::communications::messages::MeasurementResponse MockHubServer::sample_measurement_response() {
+  auto arr = std::make_shared<falcon_core::math::arrays::LabelledArrays<falcon_core::math::arrays::LabelledMeasuredArray>>();
+  return falcon_core::communications::messages::MeasurementResponse(arr);
+}
+
 } // namespace mock_hub
 } // namespace falcon

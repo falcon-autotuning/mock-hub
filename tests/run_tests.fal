@@ -4,6 +4,7 @@ import (
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/voltageStates/deviceVoltageStates"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/voltageStates/deviceVoltageState"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/voltageStatesResponse"
+  "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/measurementResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/communications/messages/settingResponse"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/instrumentInterfaces/names/ports"
   "github.com/falcon-autotuning/std-lib@v1.2.2/falconCore/instrumentInterfaces/names/instrumentPort"
@@ -67,6 +68,12 @@ autotuner MockHubLifecycleTests -> (int passed, int failed) {
         settingResponse::SettingResponse setting_resp = settingResponse::SettingResponse.New("OK", getters_map);
         mock.SetSettingResponse(setting_resp);
         Error err_setting = t.ExpectStrEq("OK", setting_resp.Message(), "Setting response message matches");
+
+        // 5. Test Measurement response setup
+        string meas_json = mock.SampleMeasurementResponseJSON();
+        measurementResponse::MeasurementResponse meas_resp = measurementResponse::MeasurementResponse.FromJSON(meas_json);
+        mock.SetMeasurementResponse(meas_resp);
+        Error err_meas = t.ExpectStrNe("", meas_resp.ToJSON(), "Measurement response is valid and non-empty");
 
         mock.Stop();
         -> __end(runner, t);
