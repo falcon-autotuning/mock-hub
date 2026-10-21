@@ -36,7 +36,8 @@
       "name": "falcon-dsl"
     },
     {
-      "name": "falcon-routine"
+      "name": "falcon-routine",
+      "version>=": "1.0.13"
     },
     {
       "name": "gtest",

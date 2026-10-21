@@ -1,24 +1,24 @@
 name: mockHub
-version: 0.0.4
+version: 0.0.5
 maintainer: Falcon Team
 github: falcon-autotuning/mock-hub
 license: "MPL-2.0"
 description: "Mock instrument hub service and FFI bindings for Falcon DSL tests"
 dependencies:
   - name: voltageStatesResponse
-    version: 1.2.2
+    version: 1.2.4
     github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/voltageStatesResponse
   - name: measurementResponse
-    version: 1.2.2
+    version: 1.2.4
     github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/measurementResponse
   - name: settingResponse
-    version: 1.2.2
+    version: 1.2.4
     github: github.com/falcon-autotuning/std-lib/falconCore/communications/messages/settingResponse
   - name: config
-    version: 1.2.2
+    version: 1.2.4
     github: github.com/falcon-autotuning/std-lib/falconCore/physics/config
   - name: ports
-    version: 1.2.2
+    version: 1.2.4
     github: github.com/falcon-autotuning/std-lib/falconCore/instrumentInterfaces/names/ports
 
 ffi:
