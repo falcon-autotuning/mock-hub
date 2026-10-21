@@ -22,4 +22,4 @@ dependencies:
     github: github.com/falcon-autotuning/std-lib/falconCore/instrumentInterfaces/names/ports
 
 ffi:
-  build/mock-hub-wrapper.so: sha256:a45681a16f2b89cc1a7ec5f23eb702de282976f92e1b94e17923bd08f46270c9
+  build/mock-hub-wrapper.so: sha256:d1e14c4621e849ad4e71d7abe721acbd0e188ad5e706a2c88a9eb82324f610ff

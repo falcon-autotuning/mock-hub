@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO falcon-autotuning/falcon-routine
     REF v${VERSION}
-    SHA512 fb8325fb774fbf225446d02f79e3650aaf09ef587f3abaed43c33a151327e0daa9a1601c801c09fd49f0276e2ef8fd8d50fc5f44b624ac9f34d6eb754a448d87
+    SHA512 29df8b94a845dd26fe7c91046b421895c1a83aef29d2b5d3400db3d2a188fd9f6916f53f428fa223835120f29e8f6b8fc48f3d0824a765bfe572d4eb31b55a0d
 )
 
 # Inject local workspace overrides if present
